@@ -5,8 +5,9 @@ pushd build
 
 cmake ${CMAKE_ARGS}                          \
     -DOJPH_BUILD_EXECUTABLES=ON              \
+    -G "Ninja"                               \
     ..
 
-make -j ${CPU_COUNT}
+cmake --build . --config Release
 
-make install
+cmake --build . --config Release --target install
