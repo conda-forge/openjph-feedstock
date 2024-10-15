@@ -66,6 +66,10 @@ if [[ "${BUILD_WITH_CONDA_DEBUG:-0}" == 1 ]]; then
     echo "rattler-build does not currently support debug mode"
 else
 
+    if [[ "${HOST_PLATFORM}" != "${BUILD_PLATFORM}" ]]; then
+        EXTRA_CB_OPTIONS="${EXTRA_CB_OPTIONS:-} --no-test"
+    fi
+
     rattler-build build --recipe ./recipe \
         -m ./.ci_support/${CONFIG}.yaml \
         --output-dir ${MINIFORGE_HOME}/conda-bld ${EXTRA_CB_OPTIONS:-} \
@@ -76,8 +80,8 @@ else
 
     ( startgroup "Inspecting artifacts" ) 2> /dev/null
 
-    # inspect_artifacts was only added in conda-forge-ci-setup 4.6.0
-    command -v inspect_artifacts >/dev/null 2>&1 && inspect_artifacts || echo "inspect_artifacts needs conda-forge-ci-setup >=4.6.0"
+    # inspect_artifacts was only added in conda-forge-ci-setup 4.9.4
+    command -v inspect_artifacts >/dev/null 2>&1 && inspect_artifacts --recipe-dir ./recipe -m ./.ci_support/${CONFIG}.yaml || echo "inspect_artifacts needs conda-forge-ci-setup >=4.9.4"
 
     ( endgroup "Inspecting artifacts" ) 2> /dev/null
     ( startgroup "Validating outputs" ) 2> /dev/null
