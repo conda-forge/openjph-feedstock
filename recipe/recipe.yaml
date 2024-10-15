@@ -12,6 +12,8 @@ source:
     # It is still difficult to use these new style tests on windows
     # https://github.com/prefix-dev/rattler-build/issues/1116
     - windows_lib_so_name.patch
+    # We use too old of an stdlibc for this definition to be defined
+    - fix_aarch_old_stdlibc.patch
 
 build:
   number: 1
