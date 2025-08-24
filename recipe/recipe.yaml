@@ -1,5 +1,5 @@
 context:
-  version: "0.21.5"
+  version: "0.22.0"
 
 package:
   name: openjph
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/aous72/OpenJPH/archive/${{ version }}.tar.gz
-  sha256: 5f2fed72b4111e3e74b51e8183ec1be5b1eeac48760dd60fd6a548a0b65aec94
+  sha256: c9c6e9ec82ee8770ede41eeffe8acaab1814724c698b258c3de160dc09cb7d12
   patches:
     # It is still difficult to use these new style tests on windows
     # https://github.com/prefix-dev/rattler-build/issues/1116
