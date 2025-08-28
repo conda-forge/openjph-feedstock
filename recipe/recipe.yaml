@@ -14,9 +14,11 @@ source:
     - windows_lib_so_name.patch
     # We use too old of an stdlibc for this definition to be defined
     - fix_aarch_old_stdlibc.patch
+    # https://github.com/aous72/OpenJPH/issues/198
+    - 0001-Use-an-aligned-memory-allocator-for-the-memfile.patch
 
 build:
-  number: 0
+  number: 1
 
 requirements:
   build:
