@@ -1,4 +1,4 @@
-From a25deccd866958d3b01266b7da813b2a41541f78 Mon Sep 17 00:00:00 2001
+From cd52ffa14ca32dcdc6298d439c8e4c7b440d03bc Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark.harfouche@gmail.com>
 Date: Thu, 28 Aug 2025 17:04:02 -0400
 Subject: [PATCH] Use an aligned memory allocator for the memfile
@@ -8,14 +8,14 @@ Subject: [PATCH] Use an aligned memory allocator for the memfile
  1 file changed, 21 insertions(+), 4 deletions(-)
 
 diff --git a/src/core/others/ojph_file.cpp b/src/core/others/ojph_file.cpp
-index d4a4756..d7390c1 100644
+index d4a4756..1aeb4c7 100644
 --- a/src/core/others/ojph_file.cpp
 +++ b/src/core/others/ojph_file.cpp
 @@ -43,6 +43,8 @@
  #include <cassert>
  #include <cstddef>
  
-+#include <malloc.h>
++#include <stdlib.h>
 +
  #include "ojph_file.h"
  #include "ojph_message.h"
