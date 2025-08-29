@@ -1,14 +1,14 @@
-From 106a6d762ce6b26d8c4bda2550ce8306675587f7 Mon Sep 17 00:00:00 2001
+From b7386c3678fe4a90956743fa87cf050d284d5437 Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark.harfouche@gmail.com>
 Date: Thu, 28 Aug 2025 17:04:02 -0400
 Subject: [PATCH] Use an aligned memory allocator for the memfile
 
 ---
- src/core/others/ojph_file.cpp | 29 +++++++++++++++++++++++------
- 1 file changed, 23 insertions(+), 6 deletions(-)
+ src/core/others/ojph_file.cpp | 33 +++++++++++++++++++++++++++------
+ 1 file changed, 27 insertions(+), 6 deletions(-)
 
 diff --git a/src/core/others/ojph_file.cpp b/src/core/others/ojph_file.cpp
-index d4a4756..2869f13 100644
+index d4a4756..57ed4c7 100644
 --- a/src/core/others/ojph_file.cpp
 +++ b/src/core/others/ojph_file.cpp
 @@ -43,6 +43,8 @@
@@ -32,11 +32,11 @@ index d4a4756..2869f13 100644
      is_open = clear_mem = false;
      buf_size = used_size = 0;
      buf = cur_ptr = NULL;
-@@ -198,15 +204,26 @@ namespace ojph {
+@@ -198,15 +204,30 @@ namespace ojph {
    /** */
    void mem_outfile::expand_storage(size_t needed_size, bool clear_all)
    {
-+    auto new_buf = this->buf;
++    ui8 * new_buf = nullptr;
      if (needed_size > buf_size)
      {
        needed_size += (needed_size + 1) >> 1; // x1.5
@@ -46,6 +46,7 @@ index d4a4756..2869f13 100644
 -        this->buf = (ui8*)realloc(this->buf, needed_size);
 -      else
 -        this->buf = (ui8*)malloc(needed_size);
++      needed_size = (needed_size + 4095) & (~4095); // align to 4096
 +      size_t used_size = (size_t)tell(); // current used size
 +
 +#ifdef OJPH_OS_WINDOWS
@@ -53,7 +54,10 @@ index d4a4756..2869f13 100644
 +#else
 +      new_buf = (ui8*)aligned_alloc(4096, needed_size);
 +#endif
-+      if (this->buf != new_buf && !clear_all){
++      if (new_buf == nullptr)
++        OJPH_ERROR(0x00060004, "failed to allocate memory (%zu bytes)", needed_size);
++
++      if (this->buf != nullptr && this->buf != new_buf && !clear_all){
 +        memcpy(new_buf, this->buf, used_size);
 +#ifdef OJPH_OS_WINDOWS
 +        _aligned_free(this->buf);
