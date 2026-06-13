@@ -25,6 +25,8 @@ requirements:
     - ${{ stdlib('c') }}
     - cmake
     - ninja
+    - if: win
+      then: cmd
   host:
     - libtiff
   run_exports:
